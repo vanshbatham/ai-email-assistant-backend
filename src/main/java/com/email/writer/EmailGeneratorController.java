@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://mail.google.com")
 @RestController
 @RequestMapping("/api/email")
 public class EmailGeneratorController {
