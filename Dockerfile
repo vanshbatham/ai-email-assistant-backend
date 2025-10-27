@@ -1,30 +1,24 @@
-# Use the official Java 21 base image (matches your project's Java version)
-FROM eclipse-temurin:21-jdk
+# 1. Use a base image that has both Java 21 AND Maven
+FROM maven:3.9.6-eclipse-temurin-21
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the Maven wrapper and pom.xml
-# This caches our dependencies for faster builds
-COPY .mvn/ .mvn
-COPY mvnw .
+# 2. Copy just the pom.xml first
+# This caches dependencies, so they don't re-download every time
 COPY pom.xml .
 
-# Download all dependencies
-RUN ./mvnw dependency:go-offline
+# 3. Use 'mvn' (from the image) instead of './mvnw'
+RUN mvn dependency:go-offline
 
 # Copy the rest of your source code
 COPY src ./src
 
-# Build the application, skipping tests
-RUN ./mvnw package -DskipTests
+# 4. Build the app, skipping tests, using 'mvn'
+RUN mvn package -DskipTests
 
-# Expose the port your Spring app runs on
+# Expose the port
 EXPOSE 8080
 
-# --- This is the command to run your app ---
-#
-# IMPORTANT: Check your pom.xml for the <artifactId> and <version>.
-# The default name is target/[artifactId]-[version].jar
-#
+# 5. Make sure this .jar file name matches your pom.xml <version>
 CMD ["java", "-jar", "target/email-writer-sb-0.0.1-SNAPSHOT.jar"]
