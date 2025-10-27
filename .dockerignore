@@ -1,0 +1,11 @@
+# Ignore build outputs
+target/
+.mvn/
+
+# Ignore IDE files
+.idea/
+*.iml
+*.iws
+
+# Ignore log files
+*.log
